@@ -1,6 +1,3 @@
-# SunnyCemetery
-SunnyCemetery is a fully featured Unique Domain Crawler with openVAS and nuclei integration for vulnerability scaning
-
 <a id="readme-top"></a>
 
 
