@@ -7,6 +7,12 @@
   </a>
 
   <h3 align="center">SunnyCemetery</h3>
+  
+,---.                    ,---.               |                   
+`---..   .,---.,---.,   .|    ,---.,-.-.,---.|--- ,---.,---.,   .
+    ||   ||   ||   ||   ||    |---'| | ||---'|    |---'|    |   |
+`---'`---'`   '`   '`---|`---'`---'` ' '`---'`---'`---'`    `---|
+                    `---'                                   `---'
 
   <p align="center">
     A fully featured Unique Domain Crawler with openVAS and nuclei integration for vulnerability scaning!
