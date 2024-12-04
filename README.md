@@ -12,14 +12,6 @@
     A fully featured Unique Domain Crawler with openVAS and nuclei integration for vulnerability scaning!
 </div>
 
-```
-  
-,---.                    ,---.               |                   
-`---..   .,---.,---.,   .|    ,---.,-.-.,---.|--- ,---.,---.,   .
-    ||   ||   ||   ||   ||    |---'| | ||---'|    |---'|    |   |
-`---'`---'`   '`   '`---|`---'`---'` ' '`---'`---'`---'`    `---|
-                    `---'                                   `---'
-```
 
 <!-- TABLE OF CONTENTS -->
 <details>
