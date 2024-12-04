@@ -5,23 +5,21 @@
 <br />
 <div align="center">
   </a>
-  ```
-  eee
-  ```
+  
   <h3 align="center">SunnyCemetery</h3>
+
+  <p align="center">
+    A fully featured Unique Domain Crawler with openVAS and nuclei integration for vulnerability scaning!
+</div>
+
+```
   
 ,---.                    ,---.               |                   
 `---..   .,---.,---.,   .|    ,---.,-.-.,---.|--- ,---.,---.,   .
     ||   ||   ||   ||   ||    |---'| | ||---'|    |---'|    |   |
 `---'`---'`   '`   '`---|`---'`---'` ' '`---'`---'`---'`    `---|
                     `---'                                   `---'
-
-  <p align="center">
-    A fully featured Unique Domain Crawler with openVAS and nuclei integration for vulnerability scaning!
-
-</div>
-
-
+```
 
 <!-- TABLE OF CONTENTS -->
 <details>
