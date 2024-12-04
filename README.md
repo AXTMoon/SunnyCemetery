@@ -80,6 +80,7 @@ options:
 
 - [x] Add roatating proxys
 - [ ] Add interactive tree
+- [ ] Add DataBase Integration
 - [ ] Add following robots.txt 
 - [ ] Add distributed crawling across multiple machines
 - [ ] Add "components" to easily filter results
