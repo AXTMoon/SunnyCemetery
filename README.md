@@ -1,16 +1,17 @@
 <a id="readme-top"></a>
 
 
-<!-- PROJECT LOGO -->
 <br />
 <div align="center">
   </a>
-  
+
   <h3 align="center">SunnyCemetery</h3>
 
   <p align="center">
     A fully featured Unique Domain Crawler with openVAS and nuclei integration for vulnerability scaning!
+
 </div>
+
 
 
 <!-- TABLE OF CONTENTS -->
@@ -29,10 +30,6 @@
     </li>
   </ol>
 </details>
-
-
-
-
 
 
 <!-- GETTING STARTED -->
@@ -55,6 +52,9 @@ urllib3<2.0.0
 
 ## Usage
 ```sh
+usage: [-h] [--url_file URL_FILE] [--depth DEPTH] [--delay DELAY] [--max_workers MAX_WORKERS] [--proxy PROXY] [--proxy_rotation_interval PROXY_ROTATION_INTERVAL] [--timeout_limit TIMEOUT_LIMIT] [--output_nuclei]
+               [--output_openvas] [--output_tree]
+               [url]
 positional arguments:
   url                   The starting URL to crawl (optional if using --url_file)
 
@@ -70,6 +70,9 @@ options:
                         Number of requests before rotating the proxy (default: 10)
   --timeout_limit TIMEOUT_LIMIT
                         Maximum number of timeouts before skipping a URL (default: 1)
+  --output_nuclei       Save output in Nuclei format (one domain per line)
+  --output_openvas      Save output in OpenVAS format (domains separated by commas)
+  --output_tree         Save the domain tree of the scan (.json)
 ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -80,7 +83,6 @@ options:
 
 - [x] Add roatating proxys
 - [ ] Add interactive tree
-- [ ] Add DataBase Integration
 - [ ] Add following robots.txt 
 - [ ] Add distributed crawling across multiple machines
 - [ ] Add "components" to easily filter results
