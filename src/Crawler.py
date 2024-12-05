@@ -1,5 +1,5 @@
 """
-Crawler for SunnyCemetery with Proxy Rotation
+Crawler for SunnyCemetery
 """
 import requests
 from bs4 import BeautifulSoup
@@ -10,8 +10,9 @@ import concurrent.futures
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 import itertools
+import os
+import json
 
-# Function to load proxies from a file
 def load_proxies(file_path):
     try:
         with open(file_path, "r") as f:
@@ -23,20 +24,15 @@ def load_proxies(file_path):
         print(f"Error loading proxy file: {e}")
         return []
 
-# Function to create a requests session with retries and a rotating proxy
 def create_session(proxy=None):
     session = requests.Session()
-
     retries = Retry(total=5, backoff_factor=1, status_forcelist=[500, 502, 503, 504])
     session.mount('http://', HTTPAdapter(max_retries=retries))
     session.mount('https://', HTTPAdapter(max_retries=retries))
-    
     if proxy:
         session.proxies = {"http": proxy, "https": proxy}
-    
     return session
 
-# Function to extract all links (URLs) from a webpage
 def extract_links(url, session, timeout_limit):
     timeout_retries = 0
     while timeout_retries < timeout_limit:
@@ -71,16 +67,42 @@ def extract_links(url, session, timeout_limit):
     print(f"Exceeded timeout limit for {url}. Skipping.")
     return set()
 
-# Function to rotate proxies during crawling
-def start_crawling(start_url, max_depth=2, delay=0.1, max_workers=5, proxy_file=None, proxy_rotation_interval=0, timeout_limit=1):
+def write_domains_to_files(unique_domains, start_url, output_nuclei, output_openvas):
+    domain = urlparse(start_url).netloc
+    domain_name = domain.replace('www.', '').replace('.', '_')
+    os.makedirs("out", exist_ok=True)
+
+    if output_nuclei:
+        nuclei_output_file = f"out/{domain_name}_nuclei.txt"
+        with open(nuclei_output_file, "w") as f:
+            for domain in sorted(unique_domains):
+                f.write(f"{domain}\n")
+        print(f"Nuclei format output written to {nuclei_output_file}")
+    
+    if output_openvas:
+        openvas_output_file = f"out/{domain_name}_openvas.txt"
+        with open(openvas_output_file, "w") as f:
+            f.write(", ".join(sorted(unique_domains)))
+        print(f"OpenVAS format output written to {openvas_output_file}")
+
+def save_tree_to_file(domain_tree, start_url):
+    domain = urlparse(start_url).netloc
+    domain_name = domain.replace('www.', '').replace('.', '_')
+    os.makedirs("out", exist_ok=True)
+
+    tree_output_file = f"out/{domain_name}_tree.json"
+    with open(tree_output_file, "w") as f:
+        json.dump(domain_tree, f, indent=4)
+    print(f"Domain tree output written to {tree_output_file}")
+
+def start_crawling(start_url, max_depth=2, delay=0.1, max_workers=5, proxy_file=None, proxy_rotation_interval=0, 
+                   timeout_limit=1, output_nuclei=False, output_openvas=False, output_tree=False):
     visited_urls = set()
+    unique_domains = set()
     proxies = itertools.cycle(load_proxies(proxy_file)) if proxy_file else None
     session = create_session(next(proxies) if proxies else None)
 
-    # Counter to track when to rotate the proxy
     request_counter = 0
-
-    # Tree structure to track domain hierarchy
     domain_tree = {}
 
     def get_rotated_session():
@@ -99,9 +121,8 @@ def start_crawling(start_url, max_depth=2, delay=0.1, max_workers=5, proxy_file=
 
         current_session = get_rotated_session()
         child_urls = extract_links(url, current_session, timeout_limit)
-        unique_domains = {urlparse(u).netloc for u in child_urls}
+        unique_domains.update({urlparse(u).netloc for u in child_urls})
 
-        # Add the current domain's children to the tree
         current_domain = urlparse(url).netloc
         if current_domain not in parent_node:
             parent_node[current_domain] = {}
@@ -117,16 +138,7 @@ def start_crawling(start_url, max_depth=2, delay=0.1, max_workers=5, proxy_file=
 
     crawl_recursive(start_url, depth=1, parent_node=domain_tree)
 
-    def write_tree_to_file(tree, file, indent=0):
-        for domain, children in tree.items():
-            file.write("  " * indent + domain + "\n")
-            write_tree_to_file(children, file, indent + 1)
+    write_domains_to_files(unique_domains, start_url, output_nuclei, output_openvas)
 
-    domain = urlparse(start_url).netloc
-    domain_name = domain.replace('www.', '').replace('.', '_')
-    output_file = f"out/{domain_name}_domain_tree.txt"
-
-    with open(output_file, "w") as f:
-        write_tree_to_file(domain_tree, f)
-
-    print(f"\nDomain tree has been written to {output_file}")
+    if output_tree:
+        save_tree_to_file(domain_tree, start_url)
