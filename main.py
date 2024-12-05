@@ -4,7 +4,7 @@ import os
 
 def mainParser():
     # Set up argument parsing
-    parser = argparse.ArgumentParser(description="Crawl websites and extract unique domains Version 0.4 (≖︿≖✿)")
+    parser = argparse.ArgumentParser(description="Crawl websites and extract unique domains Version 0.6 (≖︿≖✿)")
     parser.add_argument('url', type=str, nargs='?', help="The starting URL to crawl (optional if using --url_file)")
     parser.add_argument('--url_file', type=str, help="Path to a file containing multiple URLs (one per line)")
     parser.add_argument('--depth', type=int, default=2, help="Maximum depth to crawl (default: 2)")
@@ -13,6 +13,9 @@ def mainParser():
     parser.add_argument('--proxy', type=str, help="Path to the proxy file (e.g., proxies.txt)")
     parser.add_argument('--proxy_rotation_interval', type=int, default=10, help="Number of requests before rotating the proxy (default: 10)")
     parser.add_argument('--timeout_limit', type=int, default=1, help="Maximum number of timeouts before skipping a URL (default: 1)")
+    parser.add_argument('--output_nuclei', action='store_true', help="Save output in Nuclei format (one domain per line)")
+    parser.add_argument('--output_openvas', action='store_true', help="Save output in OpenVAS format (domains separated by commas)")
+    parser.add_argument('--output_tree', action='store_true', help="Save the domain tree of the scan")
 
     # Parse the arguments
     args = parser.parse_args()
@@ -40,7 +43,10 @@ def mainParser():
                 max_workers=args.max_workers,
                 proxy_file=args.proxy,
                 proxy_rotation_interval=args.proxy_rotation_interval,
-                timeout_limit=args.timeout_limit
+                timeout_limit=args.timeout_limit,
+                output_nuclei=args.output_nuclei,
+                output_openvas=args.output_openvas,
+                output_tree=args.output_tree
             )
     elif args.url:
         # Crawl a single URL
@@ -51,10 +57,13 @@ def mainParser():
             max_workers=args.max_workers,
             proxy_file=args.proxy,
             proxy_rotation_interval=args.proxy_rotation_interval,
-            timeout_limit=args.timeout_limit
+            timeout_limit=args.timeout_limit,
+            output_nuclei=args.output_nuclei,
+            output_openvas=args.output_openvas,
+            output_tree=args.output_tree
         )
     else:
-        print("Error: You must provide either a URL or a URL file. try using -h for more info")
+        print("Error: You must provide either a URL or a URL file. Try using -h for more info.")
 
 if __name__ == "__main__":
     mainParser()
